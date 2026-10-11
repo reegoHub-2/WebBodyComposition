@@ -4,6 +4,31 @@ import { useRouter } from 'next/router';
 import useLocalStorageState from 'use-local-storage-state';
 import { useBodyCompositionContext } from '../../contexts/bodycomposition.context';
 
+// Función fetchWithTimeoutAndRetry
+const fetchWithTimeoutAndRetry = async (url, options = {}, retries = 3, backoff = 2000) => {
+  const { timeout = 60000, ...fetchOptions } = options;
+  
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      signal: controller.signal,
+    });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    if (retries > 0) {
+      console.warn(`Petición fallida. Reintentando en ${backoff}ms... (${retries} intentos restantes)`);
+      await new Promise((resolve) => setTimeout(resolve, backoff));
+      return fetchWithTimeoutAndRetry(url, options, retries - 1, backoff * 2);
+    }
+    throw error;
+  }
+};
+
 const regionOptions = [
     { value: 'cn', label: 'China' },
     { value: 'de', label: 'Europe' },
@@ -141,6 +166,26 @@ export default function XiaomiCloud() {
         setRawResponse('');
 
         try {
+          // AQUÍ REEMPLAZAS EL 'fetch' NORMAL POR TU NUEVA FUNCIÓN:
+          const response = await fetchWithTimeoutAndRetry(`${process.env.NEXT_PUBLIC_API_URL}/xiaomi/weights`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                UserId: Number(userId),
+                PassToken: passToken,
+                Region: region,
+                Model: model,
+            }),
+            timeout: 60000 // 60 segundos de margen antes de activar el reintento
+          });
+          
+          const data = await response.json();
+          // ... continuar procesando los datos
+        } catch (err) {
+          console.error("Error definitivo tras agotar reintentos:", err);
+        }
+      };
+        /*try {
             const response = await fetch(getDebugInfo ? rawWeightEndpoint : weightEndpoint, {
                 method: 'POST',
                 headers: {
@@ -157,7 +202,7 @@ export default function XiaomiCloud() {
             const responseText = await response.text();
             if (!response.ok) {
                 throw new Error(responseText || `Request failed with status ${response.status}`);
-            }
+            }*/
 
             if (getDebugInfo) {
                 try {
