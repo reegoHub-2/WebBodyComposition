@@ -6,7 +6,7 @@ import { useBodyCompositionContext } from '../../contexts/bodycomposition.contex
 
 // Función fetchWithTimeoutAndRetry
 const fetchWithTimeoutAndRetry = async (url, options = {}, retries = 3, backoff = 2000) => {
-  const { timeout = 60000, ...fetchOptions } = options;
+  const { timeout = 300000, ...fetchOptions } = options;
   
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
