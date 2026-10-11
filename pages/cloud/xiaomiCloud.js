@@ -206,7 +206,6 @@ export default function XiaomiCloud() {
         } finally {
             setIsSubmitting(false);
         }
-      };
     };
 
     const normalizeLoginChallenge = (loginResponse) => ({
