@@ -167,7 +167,7 @@ export default function XiaomiCloud() {
 
         try {
           // AQUÍ REEMPLAZAS EL 'fetch' NORMAL POR TU NUEVA FUNCIÓN:
-          const response = await fetchWithTimeoutAndRetry(`${process.env.NEXT_PUBLIC_API_URL}/xiaomi/weights`, {
+          const response = await fetchWithTimeoutAndRetry(getDebugInfo ? rawWeightEndpoint : weightEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
