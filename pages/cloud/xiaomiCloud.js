@@ -50,9 +50,9 @@ const modelOptions = [
 ];
 
 const defaultModel = modelOptions[0].value;
-const serverUrl = 'https://grzegorz366-20366.wykr.es';
+//const serverUrl = 'https://grzegorz366-20366.wykr.es';
 //const serverUrl = 'https://localhost:7046';
-//const serverUrl = 'https://frog01-20364.wykr.es';
+const serverUrl = 'https://frog01-20364.wykr.es';
 //const serverUrl = 'https://bodycomposition-webapi.onrender.com';
 const weightEndpoint = `${serverUrl}/xiaomi/weights`;
 const loginEndpoint = `${serverUrl}/xiaomi/login`;
