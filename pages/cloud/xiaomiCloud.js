@@ -181,29 +181,6 @@ export default function XiaomiCloud() {
           
           const data = await response.json();
           // ... continuar procesando los datos
-        } catch (err) {
-          console.error("Error definitivo tras agotar reintentos:", err);
-        }
-      };
-        /*try {
-            const response = await fetch(getDebugInfo ? rawWeightEndpoint : weightEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({
-                    UserId: Number(userId),
-                    PassToken: passToken,
-                    Region: region,
-                    Model: model,
-                }),
-            });
-            const responseText = await response.text();
-            if (!response.ok) {
-                throw new Error(responseText || `Request failed with status ${response.status}`);
-            }*/
-
             if (getDebugInfo) {
                 try {
                     setRawResponse(JSON.stringify(JSON.parse(responseText), null, 2));
@@ -224,11 +201,12 @@ export default function XiaomiCloud() {
             setMessage(latestRecords.length
                 ? `Loaded ${latestRecords.length} latest weight record${latestRecords.length === 1 ? '' : 's'}.`
                 : responseText || 'Measurements request sent successfully.');
-        } catch (error) {
-            setMessage(error.message || 'Unable to get measurements.');
+        } catch (err) {
+          console.error("Error definitivo tras agotar reintentos:", err);
         } finally {
             setIsSubmitting(false);
         }
+      };
     };
 
     const normalizeLoginChallenge = (loginResponse) => ({
