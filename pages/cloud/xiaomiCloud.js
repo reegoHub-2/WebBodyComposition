@@ -176,7 +176,7 @@ export default function XiaomiCloud() {
                 Region: region,
                 Model: model,
             }),
-            timeout: 60000 // 60 segundos de margen antes de activar el reintento
+            timeout: 300000 // 60 segundos de margen antes de activar el reintento
           });
           
           const data = await response.json();
